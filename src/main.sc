@@ -1,6 +1,3 @@
-require: patterns.sc
-  module = sys.zb-common
-
 require: dicts/Employees.csv
     name = Employees
     var = $Employees
@@ -47,7 +44,7 @@ theme: /
                     intent: /Неправильно
                     intent: /Отказ
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
-                    go: Again
+                    go!: Again
                     state: Again
                         a: Пожалуйста, продиктуйте полностью ваше имя и фамилию. Сначала имя, а потом фамилию.
                         state: GetFullName
@@ -70,15 +67,17 @@ theme: /
                                 $reactions.transition("ConfirmFullName");
                             state: ConfirmFullName
                                 a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
-                                go: Check
+                                go!: Check
                                 state: Check
-                                    q: $agree || toState = "Correct"
-                                    q: $disagree || toState = "NotCorrect"
                                     state: Correct
+                                        intent: /Согласие
+                                        intent: /Правильно
                                         a: Благодарю! Хорошего дня!
                                         script:
                                             $dialer.hangUp()
                                     state: NotCorrect
+                                        intent: /Отказ
+                                        intent: /Неправильно
                                         a: Повторите, пожалуйста, полностью ваше имя и фамилию.
                                         go!: ../../Again
     
