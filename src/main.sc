@@ -1,3 +1,6 @@
+require: patterns.sc
+  module = sys.zb-common
+
 require: dicts/Employees.csv
     name = Employees
     var = $Employees
