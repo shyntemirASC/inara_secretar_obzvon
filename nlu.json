@@ -22,72 +22,100 @@
       "answerValidationThreshold" : 0.8
     }
   },
-  "intents" : [ {
-    "path" : "/Отказ",
-    "enabled" : true,
-    "shared" : false,
-    "phrases" : [ {
-      "text" : "нет"
-    }, {
-      "text" : "сейчас неудобно"
-    }, {
-      "text" : "не могу говорить"
-    }, {
-      "text" : "потом"
-    }, {
-      "text" : "перезвоните"
-    }, {
-      "text" : "не сейчас"
-    }, {
-      "text" : "занят"
-    } ],
-    "classificationRules" : {
-      "refs" : [ ]
-    },
-    "patterns" : [ ],
-    "priority" : 0
-  }, {
-    "path" : "/Согласие",
-    "enabled" : true,
-    "shared" : false,
-    "phrases" : [ {
-      "text" : "да"
-    }, {
-      "text" : "ага"
-    }, {
-      "text" : "мхм"
-    }, {
-      "text" : "конечно"
-    }, {
-      "text" : "можем говорить"
-    }, {
-      "text" : "говорите"
-    }, {
-      "text" : "да, удобно"
-    }, {
-      "text" : "слушаю вас"
-    }, {
-      "text" : "слушаю"
-    } ],
-    "classificationRules" : {
-      "refs" : [ ]
-    },
-    "patterns" : [ ],
-    "priority" : 0
-  }, {
-    "path" : "/Имя",
-    "enabled" : true,
-    "shared" : false,
-    "phrases" : [ {
-      "text" : "@ИменаСотрудников"
-    } ],
-    "classificationRules" : {
-      "refs" : [ ]
-    },
-    "patterns" : [ ],
-    "slots" : [ ],
-    "priority" : 0
-  } ],
+  "intents": [
+      {
+        "path": "/Согласие",
+        "enabled": true,
+        "shared": false,
+        "phrases": [
+          { "text": "да" },
+          { "text": "ага" },
+          { "text": "мхм" },
+          { "text": "конечно" },
+          { "text": "можем говорить" },
+          { "text": "говорите" },
+          { "text": "да, удобно" },
+          { "text": "слушаю вас" },
+          { "text": "слушаю" },
+          { "text": "да-да" },
+          { "text": "да, все верно" },
+          { "text": "именно" },
+          { "text": "так и есть" },
+          { "text": "подтверждаю" }
+        ],
+        "classificationRules": {
+          "refs": []
+        },
+        "patterns": [],
+        "priority": 0
+      },
+      {
+        "path": "/Отказ",
+        "enabled": true,
+        "shared": false,
+        "phrases": [
+          { "text": "нет" },
+          { "text": "сейчас неудобно" },
+          { "text": "не могу говорить" },
+          { "text": "потом" },
+          { "text": "перезвоните" },
+          { "text": "не сейчас" },
+          { "text": "занят" },
+          { "text": "отмена" },
+          { "text": "не хочу" },
+          { "text": "стоп" },
+          { "text": "не надо" },
+          { "text": "да нет" },
+          { "text": "неинтересно" }
+        ],
+        "classificationRules": {
+          "refs": []
+        },
+        "patterns": [],
+        "priority": 0
+      },
+      {
+        "path": "/Правильно",
+        "enabled": true,
+        "shared": false,
+        "phrases": [
+          { "text": "все верно" },
+          { "text": "правильно" },
+          { "text": "да, верно" },
+          { "text": "все так" },
+          { "text": "так точно" },
+          { "text": "подтверждаю" },
+          { "text": "так и есть" },
+          { "text": "да, так" }
+        ],
+        "classificationRules": {
+          "refs": []
+        },
+        "patterns": [],
+        "priority": 0
+      },
+      {
+        "path": "/Неправильно",
+        "enabled": true,
+        "shared": false,
+        "phrases": [
+          { "text": "неверно" },
+          { "text": "не правильно" },
+          { "text": "ошибка" },
+          { "text": "нет, не так" },
+          { "text": "не всё верно" },
+          { "text": "не так" },
+          { "text": "неправильно" },
+          { "text": "не тот человек" },
+          { "text": "вы ошиблись" }
+        ],
+        "classificationRules": {
+          "refs": []
+        },
+        "patterns": [],
+        "priority": 0
+      }
+    ],
   "entities" : [ {
     "entity" : {
       "name" : "ИменаСотрудников",

@@ -35,11 +35,13 @@ theme: /
             state: CheckData
                 a: У нас указан ваш номер на имя {{$session.name}}. Всё верно?
                 state: EndThanks
+                    intent: /Правильно
                     intent: /Согласие
                     a: Благодарю! Хорошего дня!
                     script:
                         $dialer.hangUp()
                 state: UpdatePhone
+                    intent: /Неправильно
                     intent: /Отказ
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
                     a: Пожалуйста, продиктуйте полностью ваше имя и фамилию. Сначала имя, а потом фамилию.
@@ -67,17 +69,21 @@ theme: /
                             state: Check
                                 state: Correct
                                     intent: /Согласие
+                                    intent: /Правильно
                                     a: Благодарю! Хорошего дня!
                                     script:
                                         $dialer.hangUp()
                                 state: NotCorrect
                                     intent: /Отказ
+                                    intent: /Неправильно
                                     a: Повторите, пожалуйста, полностью ваше имя и фамилию.
                                     go!: ../../UpdatePhone
     
     state: No
         intent: /Отказ
         a: Хорошо, не буду отвлекать. Свяжемся позже — хорошего вам дня!
+        script:
+            $dialer.hangUp()
         
     state: What
         q: Какой у меня номер?
