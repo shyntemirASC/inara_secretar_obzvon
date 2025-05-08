@@ -80,7 +80,7 @@ theme: /
                                             $dialer.hangUp()
                                     state: NotCorrect
                                         a: Повторите, пожалуйста, полностью ваше имя и фамилию.
-                                        go!: ../../Again
+                                        go!: ../../../../../Again
     
     state: No
         intent: /Отказ
