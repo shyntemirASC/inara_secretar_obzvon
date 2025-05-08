@@ -108,13 +108,13 @@ theme: /
                                 a: Ой, я вас не поняла
                                 go!: ../../ConfirmFullName
                             
-    state: No
-        intent: /Отказ
-        script:
-            $session.callStatus = "No";
-        a: Хорошо, не буду отвлекать. Свяжемся позже — хорошего вам дня!
-        script:
-            $dialer.hangUp()
+        state: No
+            intent: /Отказ
+            script:
+                $session.callStatus = "No";
+            a: Хорошо, не буду отвлекать. Свяжемся позже — хорошего вам дня!
+            script:
+                $dialer.hangUp()
         
     state: What
         q: Какой у меня номер?
