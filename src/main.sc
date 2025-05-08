@@ -78,7 +78,7 @@ theme: /
                                 $session.fullNameRaw = fullName;
                                 $analytics.setSessionData("Имя", $session.inputName)
                                 $analytics.setSessionData("Фамилия", $session.surname)
-                                $reactions.transition("../../../ConfirmFullName");
+                                $reactions.transition("../ConfirmFullName");
                     state: ConfirmFullName
                         a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
                         go!: Check
@@ -95,7 +95,7 @@ theme: /
                                 script:
                                     $session.callStatus = "notCorrect";
                                 a: Повторите, пожалуйста, полностью ваше имя и фамилию.
-                                go!: ../../../../Again
+                                go!: ../../Again
     
     state: No
         intent: /Отказ
