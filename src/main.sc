@@ -61,6 +61,8 @@ theme: /
                             }
                             $session.fullNameRaw = fullName;
                             $analytics.setSessionData("ФИО", fullName);
+                            $analytics.setSessionData("Имя", $session.inputName)
+                            $analytics.setSessionData("Фамилия", $session.surname)
                             $reactions.transition("ConfirmFullName");
                         state: ConfirmFullName
                             a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
@@ -87,7 +89,7 @@ theme: /
     
     state: NoMatch
         event!: noMatch
-        a: Ой, я вас не поняла, 
+        a: Ой, я вас не поняла, повторите пожалуйста!
 
     state: NoInput || noContext = true
         event!: speechNotRecognized
