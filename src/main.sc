@@ -42,6 +42,7 @@ theme: /
                     intent: /Согласие
                     a: Благодарю! Хорошего дня!
                     script:
+                        sleep(2000)
                         $dialer.hangUp()
                 state: UpdatePhone
                     intent: /Неправильно
