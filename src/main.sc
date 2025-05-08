@@ -20,92 +20,93 @@ theme: /
             $dialer.setTtsConfig({emotion: "good"});
             $session.callStatus = "start";
         a: Здравствуйте! Я Инара-Секретарь.
-        a: Мы уточняем и актуализируем контактную информацию наших сотрудников. Подскажите, удобно ли сейчас говорить?
-
-    state: Yes
-        intent: /Согласие
-        go!: CheckEmployeeExists
-        state: CheckEmployeeExists
-            script:
-                $session.callStatus = "Yes";
-                $session.name = FindEmployeeByNumber($dialer.getCaller(), $Employees, $EmployeesEmphasis);
-                if ($session.name) {
-                    $reactions.transition("CheckData"); 
-                } else {
-                    $reactions.transition("NoName");
-                }
-            state: NoName
+        a: Мы уточняем и актуализируем контактную информацию наших сотрудников.
+    state: PostStart
+        a: Подскажите, удобно ли сейчас говорить?
+        state: Yes
+            intent: /Согласие
+            go!: CheckEmployeeExists
+            state: CheckEmployeeExists
                 script:
-                    $session.callStatus = "noName";
-                a: Ваш номер отсуствует в нашей базе данных.
-                go!: UpdatePhone
-            state: CheckData
-                script:
-                    $session.callStatus = "checkData";
-                a: У нас указан ваш номер на имя {{$session.name}}. Всё верно?
-                state: NoMatch
-                    event: noMatch
-                    a: Ой, я вас не поняла
+                    $session.callStatus = "Yes";
+                    $session.name = FindEmployeeByNumber($dialer.getCaller(), $Employees, $EmployeesEmphasis);
+                    if ($session.name) {
+                        $reactions.transition("CheckData"); 
+                    } else {
+                        $reactions.transition("NoName");
+                    }
+                state: NoName
+                    script:
+                        $session.callStatus = "noName";
+                    a: Ваш номер отсуствует в нашей базе данных.
+                    go!: UpdatePhone
+                state: CheckData
+                    script:
+                        $session.callStatus = "checkData";
                     a: У нас указан ваш номер на имя {{$session.name}}. Всё верно?
-                state: EndThanks
-                    script:
-                        $session.callStatus = "endThanks";
-                    intent: /Правильно
-                    intent: /Согласие
-                    a: Благодарю! Хорошего дня!
-                    script:
-                        sleep(2000)
-                        $dialer.hangUp()
-                state: UpdatePhone
-                    script:
-                        $session.callStatus = "updatePhone";
-                    intent: /Неправильно
-                    intent: /Отказ
-                    a: Для обновления нашей базы данных нам необходимо ваше ФИО.
-                    a: Пожалуйста, продиктуйте ваше имя и фамилию.
-                    go!: Again
-                    state: Again
-                        a: Сначала имя, а потом фамилию.
-                        state: GetFullName
-                            q: *
-                            script:
-                                $dialer.setNoInputTimeout(2000);
-                                var fullName = $request.query.trim();
-                                var parts = fullName.split(/\s+/);
-                                if (parts.length >= 2) {
-                                    $session.inputName = parts[0];
-                                    $session.surname = parts[1];
-                                } else {
-                                    $session.inputName = fullName;
-                                    $session.surname = "";
-                                }
-                                $session.fullNameRaw = fullName;
-                                $analytics.setSessionData("Имя", $session.inputName)
-                                $analytics.setSessionData("Фамилия", $session.surname)
-                                $reactions.transition("../../ConfirmFullName");
+                    state: NoMatch
+                        event: noMatch
+                        a: Ой, я вас не поняла
+                        a: У нас указан ваш номер на имя {{$session.name}}. Всё верно?
+                    state: EndThanks
+                        script:
+                            $session.callStatus = "endThanks";
+                        intent: /Правильно
+                        intent: /Согласие
+                        a: Благодарю! Хорошего дня!
+                        script:
+                            sleep(2000)
+                            $dialer.hangUp()
+                    state: UpdatePhone
+                        script:
+                            $session.callStatus = "updatePhone";
+                        intent: /Неправильно
+                        intent: /Отказ
+                        a: Для обновления нашей базы данных нам необходимо ваше ФИО.
+                        a: Пожалуйста, продиктуйте ваше имя и фамилию.
+                        go!: Again
+                        state: Again
+                            a: Сначала имя, а потом фамилию.
+                            state: GetFullName
+                                q: *
+                                script:
+                                    $dialer.setNoInputTimeout(2000);
+                                    var fullName = $request.query.trim();
+                                    var parts = fullName.split(/\s+/);
+                                    if (parts.length >= 2) {
+                                        $session.inputName = parts[0];
+                                        $session.surname = parts[1];
+                                    } else {
+                                        $session.inputName = fullName;
+                                        $session.surname = "";
+                                    }
+                                    $session.fullNameRaw = fullName;
+                                    $analytics.setSessionData("Имя", $session.inputName)
+                                    $analytics.setSessionData("Фамилия", $session.surname)
+                                    $reactions.transition("../../ConfirmFullName");
 
-                    state: ConfirmFullName
-                        a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
-                        go!: Check
-                        state: Check
-                            q: $agree || toState = "Correct"
-                            q: $disagree || toState = "NotCorrect"
-                            state: Correct
-                                script:
-                                    $session.callStatus = "correct";
-                                a: Благодарю! Хорошего дня!
-                                script:
-                                    $dialer.hangUp()
-                            state: NotCorrect
-                                script:
-                                    $session.callStatus = "notCorrect";
-                                a: Повторите, пожалуйста, полностью ваше имя и фамилию.
-                                go!: ../../../Again
-                        state: NoMatch
-                            event: noMatch
-                            a: Ой, я вас не поняла
-                            go!: ../../ConfirmFullName
-                        
+                        state: ConfirmFullName
+                            a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
+                            go!: Check
+                            state: Check
+                                q: $agree || toState = "Correct"
+                                q: $disagree || toState = "NotCorrect"
+                                state: Correct
+                                    script:
+                                        $session.callStatus = "correct";
+                                    a: Благодарю! Хорошего дня!
+                                    script:
+                                        $dialer.hangUp()
+                                state: NotCorrect
+                                    script:
+                                        $session.callStatus = "notCorrect";
+                                    a: Повторите, пожалуйста, полностью ваше имя и фамилию.
+                                    go!: ../../../Again
+                            state: NoMatch
+                                event: noMatch
+                                a: Ой, я вас не поняла
+                                go!: ../../ConfirmFullName
+                            
     state: No
         intent: /Отказ
         script:
@@ -121,7 +122,8 @@ theme: /
     
     state: NoMatch
         event: noMatch
-        a: Ой, я вас не поняла, подскажите, удобно ли сейчас говорить?
+        a: Ой, я вас не поняла
+        go!: PostStart
 
     state: NoInput || noContext = true
         event!: speechNotRecognized
