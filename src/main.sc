@@ -43,45 +43,35 @@ theme: /
                     script:
                         $dialer.hangUp()
                 state: UpdatePhone
-                    intent: /Отказ
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
-                    a: Пожалуйста, продиктуйте свое имя
-                    state: NoMatch
-                        event: noMatch
+                    a: Пожалуйста, продиктуйте полностью ваше имя и фамилию.
+                    state: GetFullName
+                        q: *
                         script:
                             $dialer.setNoInputTimeout(2000);
-                            $session.inputName = $request.query.trim();
-                            $analytics.setSessionData("Имя", $session.inputName);
-                            $reactions.transition("ConfirmName");
-                        state: ConfirmName
-                            a: Сохраняю ваше имя как {{$session.inputName}}. Всё верно?
-                        state: NotCorrect
-                            intent: /Отказ
-                            go!: ../../../UpdatePhone
-                        state: NewSurname
-                            intent: /Согласие
-                            a: Пожалуйста, продиктуйте вашу фамилию.
-                            state: NoMatch
-                                q: *
+                            let fullName = $request.query.trim();
+                            let parts = fullName.split(/\s+/);
+                            if (parts.length >= 2) {
+                                $session.inputName = parts[1];
+                                $session.surname = parts[0];
+                            } else {
+                                $session.inputName = fullName;
+                                $session.surname = "";
+                            }
+                            $session.fullNameRaw = fullName;
+                            $analytics.setSessionData("ФИО", fullName);
+                            $reactions.transition("ConfirmFullName");
+                        state: ConfirmFullName
+                            a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
+                            state: Confirmed
+                                intent: /Согласие
+                                a: Благодарю! Хорошего дня!
                                 script:
-                                    $dialer.setNoInputTimeout(2000);
-                                    $session.surname = $request.query
-                                    $analytics.setSessionData("Фамилия", $request.query);
-                                    $reactions.transition("ConfirmUserName");
-                                state: ConfirmUserName
-                                    a: Сохраняю вашу фамилию как {{$session.surname}}. Всё верно?
-                                    go: Check
-                                    state: Check
-                                        q: $agree || toState = "Correct"
-                                        q: $disagree || toState = "NotCorrect"
-                                        state: Correct
-                                            a: Благодарю! Хорошего дня!
-                                            script:
-                                                $dialer.hangUp()
-                                                                                    
-                                        state: NotCorrect
-                                            intent: $disagree
-                                            go!: ../../../../../NewSurname
+                                    $dialer.hangUp()
+                            state: NotCorrect
+                                intent: /Отказ
+                                a: Повторите, пожалуйста, полностью ваше имя и фамилию.
+                                go!: ../../UpdatePhone
     
     state: No
         intent: /Отказ
