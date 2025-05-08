@@ -43,6 +43,10 @@ theme: /
                 script:
                     $session.callStatus = "checkData";
                 a: У нас указан ваш номер на имя {{$session.name}}. Всё верно?
+                state: NoMatch
+                    event: noMatch
+                    a: Ой, я вас не поняла
+                    a: У нас указан ваш номер на имя {{$session.name}}. Всё верно?
                 state: EndThanks
                     script:
                         $session.callStatus = "endThanks";
@@ -79,6 +83,7 @@ theme: /
                                 $analytics.setSessionData("Имя", $session.inputName)
                                 $analytics.setSessionData("Фамилия", $session.surname)
                                 $reactions.transition("../../ConfirmFullName");
+
                     state: ConfirmFullName
                         a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
                         go!: Check
@@ -96,7 +101,11 @@ theme: /
                                     $session.callStatus = "notCorrect";
                                 a: Повторите, пожалуйста, полностью ваше имя и фамилию.
                                 go!: ../../../Again
-    
+                        state: NoMatch
+                            event: noMatch
+                            a: Ой, я вас не поняла
+                            go!: ../../ConfirmFullName
+                        
     state: No
         intent: /Отказ
         script:
@@ -111,8 +120,8 @@ theme: /
             $reactions.answer($dialer.getCaller());
     
     state: NoMatch
-        event!: noMatch
-        a: Ой, я вас не поняла, повторите пожалуйста!
+        event: noMatch
+        a: Ой, я вас не поняла, подскажите, удобно ли сейчас говорить?
 
     state: NoInput || noContext = true
         event!: speechNotRecognized
