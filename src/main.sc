@@ -43,6 +43,8 @@ theme: /
                     script:
                         $dialer.hangUp()
                 state: UpdatePhone
+                    intent: /Согласие
+                    q: $disagree
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
                     a: Пожалуйста, продиктуйте полностью ваше имя и фамилию.
                     state: GetFullName
@@ -65,11 +67,13 @@ theme: /
                             a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
                             state: Confirmed
                                 intent: /Согласие
+                                q: $agree
                                 a: Благодарю! Хорошего дня!
                                 script:
                                     $dialer.hangUp()
                             state: NotCorrect
                                 intent: /Отказ
+                                q: $diagree
                                 a: Повторите, пожалуйста, полностью ваше имя и фамилию.
                                 go!: ../../UpdatePhone
     
