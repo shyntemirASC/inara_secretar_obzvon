@@ -45,7 +45,7 @@ theme: /
                 state: UpdatePhone
                     intent: /Отказ
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
-                    a: Пожалуйста, продиктуйте полностью ваше имя и фамилию.
+                    a: Пожалуйста, продиктуйте полностью ваше имя и фамилию. Сначала имя, а потом фамилию.
                     state: GetFullName
                         q: *
                         script:
@@ -53,8 +53,8 @@ theme: /
                             var fullName = $request.query.trim();
                             var parts = fullName.split(/\s+/);
                             if (parts.length >= 2) {
-                                $session.inputName = parts[1];
-                                $session.surname = parts[0];
+                                $session.inputName = parts[0];
+                                $session.surname = parts[1];
                             } else {
                                 $session.inputName = fullName;
                                 $session.surname = "";
