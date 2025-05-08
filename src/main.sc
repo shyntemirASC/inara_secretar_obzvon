@@ -56,7 +56,7 @@ theme: /
                         intent: /Согласие
                         a: Благодарю! Хорошего дня!
                         script:
-                            sleep(2000)
+                            $analytics.setSessionData("Статус", $session.callStatus);
                             $dialer.hangUp()
                     state: UpdatePhone
                         script:
@@ -95,6 +95,7 @@ theme: /
                                 state: Correct
                                     script:
                                         $session.callStatus = "correct";
+                                        $analytics.setSessionData("Статус", $session.callStatus);
                                     a: Благодарю! Хорошего дня!
                                     script:
                                         $dialer.hangUp()
@@ -112,6 +113,7 @@ theme: /
             intent: /Отказ
             script:
                 $session.callStatus = "No";
+                $analytics.setSessionData("Статус", $session.callStatus);
             a: Хорошо, не буду отвлекать. Свяжемся позже — хорошего вам дня!
             script:
                 $dialer.hangUp()
