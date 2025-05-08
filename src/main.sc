@@ -21,7 +21,7 @@ theme: /
             $session.callStatus = "start";
         a: Здравствуйте! Я Инара-Секретарь.
         a: Мы уточняем и актуализируем контактную информацию наших сотрудников.
-        go!: PostStart
+        go!: ../PostStart
     state: PostStart
         a: Подскажите, удобно ли сейчас говорить?
         state: Yes
@@ -124,7 +124,7 @@ theme: /
     state: NoMatch
         event: noMatch
         a: Ой, я вас не поняла
-        go!: PostStart
+        go!: ../PostStart
 
     state: NoInput || noContext = true
         event!: speechNotRecognized
