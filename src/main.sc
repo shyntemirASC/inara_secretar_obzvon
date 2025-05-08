@@ -49,8 +49,8 @@ theme: /
                         q: *
                         script:
                             $dialer.setNoInputTimeout(2000);
-                            let fullName = $request.query.trim();
-                            let parts = fullName.split(/\s+/);
+                            var fullName = $request.query.trim();
+                            var parts = fullName.split(/\s+/);
                             if (parts.length >= 2) {
                                 $session.inputName = parts[1];
                                 $session.surname = parts[0];
