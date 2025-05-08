@@ -43,7 +43,7 @@ theme: /
                     script:
                         $dialer.hangUp()
                 state: UpdatePhone
-                    intent: /Согласие
+                    intent: /Отказ
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
                     a: Пожалуйста, продиктуйте полностью ваше имя и фамилию.
                     state: GetFullName
@@ -82,7 +82,11 @@ theme: /
         q: Какой у меня номер?
         script:
             $reactions.answer($dialer.getCaller());
-        
+    
+    state: NoMatch
+        event!: noMatch
+        a: Ой, я вас не поняла
+
     state: NoInput || noContext = true
         event!: speechNotRecognized
         script:
