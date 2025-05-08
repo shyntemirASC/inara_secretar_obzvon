@@ -44,40 +44,40 @@ theme: /
                     intent: /Неправильно
                     intent: /Отказ
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
-                    a: Пожалуйста, продиктуйте полностью ваше имя и фамилию. Сначала имя, а потом фамилию.
-                    state: GetFullName
-                        q: *
-                        script:
-                            $dialer.setNoInputTimeout(2000);
-                            var fullName = $request.query.trim();
-                            var parts = fullName.split(/\s+/);
-                            if (parts.length >= 2) {
-                                $session.inputName = parts[0];
-                                $session.surname = parts[1];
-                            } else {
-                                $session.inputName = fullName;
-                                $session.surname = "";
-                            }
-                            $session.fullNameRaw = fullName;
-                            $analytics.setSessionData("ФИО", fullName);
-                            $analytics.setSessionData("Имя", $session.inputName)
-                            $analytics.setSessionData("Фамилия", $session.surname)
-                            $reactions.transition("ConfirmFullName");
-                        state: ConfirmFullName
-                            a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
-                            go: Check
-                            state: Check
-                                state: Correct
-                                    intent: /Согласие
-                                    intent: /Правильно
-                                    a: Благодарю! Хорошего дня!
-                                    script:
-                                        $dialer.hangUp()
-                                state: NotCorrect
-                                    intent: /Отказ
-                                    intent: /Неправильно
-                                    a: Повторите, пожалуйста, полностью ваше имя и фамилию.
-                                    go!: ../../UpdatePhone
+                    go: Again
+                    state: Again
+                        a: Пожалуйста, продиктуйте полностью ваше имя и фамилию. Сначала имя, а потом фамилию.
+                        state: GetFullName
+                            q: *
+                            script:
+                                $dialer.setNoInputTimeout(2000);
+                                var fullName = $request.query.trim();
+                                var parts = fullName.split(/\s+/);
+                                if (parts.length >= 2) {
+                                    $session.inputName = parts[0];
+                                    $session.surname = parts[1];
+                                } else {
+                                    $session.inputName = fullName;
+                                    $session.surname = "";
+                                }
+                                $session.fullNameRaw = fullName;
+                                $analytics.setSessionData("ФИО", fullName);
+                                $analytics.setSessionData("Имя", $session.inputName)
+                                $analytics.setSessionData("Фамилия", $session.surname)
+                                $reactions.transition("ConfirmFullName");
+                            state: ConfirmFullName
+                                a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
+                                go: Check
+                                state: Check
+                                    q: $agree || toState = "Correct"
+                                    q: $disagree || toState = "NotCorrect"
+                                    state: Correct
+                                        a: Благодарю! Хорошего дня!
+                                        script:
+                                            $dialer.hangUp()
+                                    state: NotCorrect
+                                        a: Повторите, пожалуйста, полностью ваше имя и фамилию.
+                                        go!: ../../Again
     
     state: No
         intent: /Отказ
