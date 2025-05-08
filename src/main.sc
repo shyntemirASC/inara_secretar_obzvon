@@ -1,6 +1,3 @@
-require: patterns.sc
-  module = sys.zb-common
-
 require: dicts/Employees.csv
     name = Employees
     var = $Employees
@@ -20,10 +17,9 @@ theme: /
             $dialer.setTtsConfig({emotion: "good"});
         a: Здравствуйте! Я Инара-Секретарь.
         a: Мы уточняем и актуализируем контактную информацию наших сотрудников. Подскажите, удобно ли сейчас говорить?
-        q: $agree || toState = "Yes"
-        q: $disagree || toState = "No"
 
     state: Yes
+        intent: /Согласие
         go!: CheckEmployeeExists
         state: CheckEmployeeExists
             script:
@@ -38,13 +34,13 @@ theme: /
                 go!: UpdatePhone
             state: CheckData
                 a: У нас указан ваш номер на имя {{$session.name}}. Всё верно?
-                q: $agree || toState = "EndThanks"
-                q: $disagree || toState = "UpdatePhone"
                 state: EndThanks
+                    intent: /Согласие
                     a: Благодарю! Хорошего дня!
                     script:
                         $dialer.hangUp()
                 state: UpdatePhone
+                    intent: /Отказ
                     a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
                     a: Пожалуйста, продиктуйте полностью ваше имя и фамилию. Сначала имя, а потом фамилию.
                     state: GetFullName
@@ -69,17 +65,18 @@ theme: /
                             a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
                             go: Check
                             state: Check
-                                q: $agree || toState = "Correct"
-                                q: $disagree || toState = "NotCorrect"
                                 state: Correct
+                                    intent: /Согласие
                                     a: Благодарю! Хорошего дня!
                                     script:
                                         $dialer.hangUp()
                                 state: NotCorrect
+                                    intent: /Отказ
                                     a: Повторите, пожалуйста, полностью ваше имя и фамилию.
                                     go!: ../../UpdatePhone
     
     state: No
+        intent: /Отказ
         a: Хорошо, не буду отвлекать. Свяжемся позже — хорошего вам дня!
         
     state: What
