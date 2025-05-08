@@ -49,7 +49,7 @@ theme: /
                     state: NoMatch
                         event: noMatch
                         script:
-                            $dialer.setNoInputTimeout(1500);
+                            $dialer.setNoInputTimeout(2000);
                             $session.inputName = $request.query.trim();
                             $analytics.setSessionData("Имя", $session.inputName);
                             $reactions.transition("ConfirmName");
@@ -64,7 +64,7 @@ theme: /
                             state: NoMatch
                                 q: *
                                 script:
-                                    $dialer.setNoInputTimeout(1500);
+                                    $dialer.setNoInputTimeout(2000);
                                     $session.surname = $request.query
                                     $analytics.setSessionData("Фамилия", $request.query);
                                     $reactions.transition("ConfirmUserName");
@@ -92,6 +92,14 @@ theme: /
         script:
             $reactions.answer($dialer.getCaller());
         
-    state: NoMatch
-        event: noMatch
-        a: Ой, я вас не поняла.
+    state: NoInput || noContext = true
+        event!: speechNotRecognized
+        script:
+            $session.noInputCounter = $session.noInputCounter || 0;
+            $session.noInputCounter++;
+        if: $session.noInputCounter >= 3
+            a: Кажется, проблемы со связью.
+            script:
+                $dialer.hangUp();
+        else:
+            a: Вас плохо слышно. Повторите, пожалуйста!
