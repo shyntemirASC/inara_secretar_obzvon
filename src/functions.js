@@ -27,3 +27,7 @@ function FindCorrectEmphasis(name,EmphasisList)
 
     return correct_emphasis;
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}

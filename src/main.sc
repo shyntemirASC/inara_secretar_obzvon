@@ -16,9 +16,6 @@ theme: /
     state: Start
         q!: $regex</start>
         script:
-            function sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
             sleep(1500);
             $dialer.setTtsConfig({emotion: "good"});
         a: Здравствуйте! Я Инара-Секретарь.
