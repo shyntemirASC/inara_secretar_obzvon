@@ -16,6 +16,10 @@ theme: /
     state: Start
         q!: $regex</start>
         script:
+            function sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            sleep(1500);
             $dialer.setTtsConfig({emotion: "good"});
         a: Здравствуйте! Я Инара-Секретарь.
         a: Мы уточняем и актуализируем контактную информацию наших сотрудников. Подскажите, удобно ли сейчас говорить?
@@ -43,6 +47,7 @@ theme: /
                         $dialer.hangUp()
                 state: UpdatePhone
                     intent: /Отказ
+                    a: Для обновления нашей базы данных нам необходимо ваше имя и фамилия.
                     a: Пожалуйста, продиктуйте свое имя
                     state: NoMatch
                         event: noMatch
