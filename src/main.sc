@@ -64,15 +64,17 @@ theme: /
                             $reactions.transition("ConfirmFullName");
                         state: ConfirmFullName
                             a: Сохраняю ваше имя как {{$session.inputName}}, фамилию как {{$session.surname}}. Всё верно?
-                            state: Confirmed
-                                intent: /Согласие
-                                a: Благодарю! Хорошего дня!
-                                script:
-                                    $dialer.hangUp()
-                            state: NotCorrect
-                                intent: /Отказ
-                                a: Повторите, пожалуйста, полностью ваше имя и фамилию.
-                                go!: ../../UpdatePhone
+                            go: Check
+                            state: Check
+                                q: $agree || toState = "Correct"
+                                q: $disagree || toState = "NotCorrect"
+                                state: Correct
+                                    a: Благодарю! Хорошего дня!
+                                    script:
+                                        $dialer.hangUp()
+                                state: NotCorrect
+                                    a: Повторите, пожалуйста, полностью ваше имя и фамилию.
+                                    go!: ../../UpdatePhone
     
     state: No
         intent: /Отказ
@@ -85,7 +87,7 @@ theme: /
     
     state: NoMatch
         event!: noMatch
-        a: Ой, я вас не поняла
+        a: Ой, я вас не поняла, 
 
     state: NoInput || noContext = true
         event!: speechNotRecognized
